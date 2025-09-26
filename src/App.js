@@ -4,7 +4,7 @@ import UserRegistration from './components/UserRegistration';
 import UserList from './components/UserList';
 import ChatInterface from './components/ChatInterface';
 
-const socket = io('http://localhost:5000');
+const socket = io(process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000');
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
