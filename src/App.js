@@ -3,8 +3,9 @@ import io from 'socket.io-client';
 import UserRegistration from './components/UserRegistration';
 import UserList from './components/UserList';
 import ChatInterface from './components/ChatInterface';
+import config from './config/config';
 
-const socket = io(process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000');
+const socket = io(config.SOCKET_URL);
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -19,21 +20,21 @@ function App() {
     
     if (savedUserId && savedUser) {
       setCurrentUser(JSON.parse(savedUser));
-      socket.emit('join', savedUserId);
+      socket.emit(config.SOCKET_EVENTS.JOIN, savedUserId);
       setIsConnected(true);
     }
 
     // Socket connection events
-    socket.on('connect', () => {
+    socket.on(config.SOCKET_EVENTS.CONNECT, () => {
       console.log('Connected to server');
     });
 
-    socket.on('disconnect', () => {
+    socket.on(config.SOCKET_EVENTS.DISCONNECT, () => {
       console.log('Disconnected from server');
       setIsConnected(false);
     });
 
-    socket.on('userStatusUpdate', (data) => {
+    socket.on(config.SOCKET_EVENTS.USER_STATUS_UPDATE, (data) => {
       setUsers(prevUsers => 
         prevUsers.map(user => 
           user.userId === data.userId 
@@ -44,9 +45,9 @@ function App() {
     });
 
     return () => {
-      socket.off('connect');
-      socket.off('disconnect');
-      socket.off('userStatusUpdate');
+      socket.off(config.SOCKET_EVENTS.CONNECT);
+      socket.off(config.SOCKET_EVENTS.DISCONNECT);
+      socket.off(config.SOCKET_EVENTS.USER_STATUS_UPDATE);
     };
   }, []);
 
@@ -54,7 +55,7 @@ function App() {
     setCurrentUser(user);
     localStorage.setItem('userId', user.userId);
     localStorage.setItem('user', JSON.stringify(user));
-    socket.emit('join', user.userId);
+    socket.emit(config.SOCKET_EVENTS.JOIN, user.userId);
     setIsConnected(true);
   };
 

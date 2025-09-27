@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import config from '../config/config';
 
 const UserList = ({ currentUser, users, onUserSelect, isConnected }) => {
   const [allUsers, setAllUsers] = useState([]);
@@ -10,7 +11,7 @@ const UserList = ({ currentUser, users, onUserSelect, isConnected }) => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/users');
+      const response = await fetch(`${config.API_URL}${config.ENDPOINTS.USERS}`);
       if (response.ok) {
         const data = await response.json();
         // Handle both old and new response formats
@@ -54,7 +55,7 @@ const UserList = ({ currentUser, users, onUserSelect, isConnected }) => {
             <div className="flex items-center space-x-4">
               <div className="relative">
                 <img
-                  src={`http://localhost:5000/uploads/${currentUser.image}`}
+                  src={`${config.API_URL}${config.ENDPOINTS.UPLOADS}/${currentUser.image}`}
                   alt={currentUser.name}
                   className="w-12 h-12 rounded-full object-cover"
                 />
@@ -66,7 +67,7 @@ const UserList = ({ currentUser, users, onUserSelect, isConnected }) => {
               </div>
             </div>
             <div className="text-right">
-              <h2 className="text-2xl font-bold text-gray-800">Chat App</h2>
+              <h2 className="text-2xl font-bold text-gray-800">{config.APP_NAME}</h2>
               <p className="text-sm text-gray-500">Select a user to start chatting</p>
             </div>
           </div>
@@ -101,7 +102,7 @@ const UserList = ({ currentUser, users, onUserSelect, isConnected }) => {
                   <div className="flex items-center space-x-4">
                     <div className="relative">
                       <img
-                        src={`http://localhost:5000/uploads/${user.image}`}
+                        src={`${config.API_URL}${config.ENDPOINTS.UPLOADS}/${user.image}`}
                         alt={user.name}
                         className="w-12 h-12 rounded-full object-cover"
                       />

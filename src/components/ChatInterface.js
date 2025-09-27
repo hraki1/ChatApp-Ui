@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import config from '../config/config';
 
 const ChatInterface = ({ currentUser, selectedUser, socket, onBack }) => {
   const [messages, setMessages] = useState([]);
@@ -13,16 +14,16 @@ const ChatInterface = ({ currentUser, selectedUser, socket, onBack }) => {
     fetchMessages();
     
     // Socket event listeners
-    socket.on('receiveMessage', handleReceiveMessage);
-    socket.on('messageSent', handleMessageSent);
-    socket.on('userTyping', handleUserTyping);
-    socket.on('error', handleError);
+    socket.on(config.SOCKET_EVENTS.RECEIVE_MESSAGE, handleReceiveMessage);
+    socket.on(config.SOCKET_EVENTS.MESSAGE_SENT, handleMessageSent);
+    socket.on(config.SOCKET_EVENTS.USER_TYPING, handleUserTyping);
+    socket.on(config.SOCKET_EVENTS.ERROR, handleError);
 
     return () => {
-      socket.off('receiveMessage', handleReceiveMessage);
-      socket.off('messageSent', handleMessageSent);
-      socket.off('userTyping', handleUserTyping);
-      socket.off('error', handleError);
+      socket.off(config.SOCKET_EVENTS.RECEIVE_MESSAGE, handleReceiveMessage);
+      socket.off(config.SOCKET_EVENTS.MESSAGE_SENT, handleMessageSent);
+      socket.off(config.SOCKET_EVENTS.USER_TYPING, handleUserTyping);
+      socket.off(config.SOCKET_EVENTS.ERROR, handleError);
     };
   }, [selectedUser]);
 
@@ -33,7 +34,7 @@ const ChatInterface = ({ currentUser, selectedUser, socket, onBack }) => {
   const fetchMessages = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/messages/${currentUser.userId}/${selectedUser.userId}`
+        `${config.API_URL}${config.ENDPOINTS.MESSAGES}/${currentUser.userId}/${selectedUser.userId}`
       );
       if (response.ok) {
         const data = await response.json();
@@ -74,7 +75,7 @@ const ChatInterface = ({ currentUser, selectedUser, socket, onBack }) => {
         message: newMessage.trim()
       };
 
-      socket.emit('sendMessage', messageData);
+      socket.emit(config.SOCKET_EVENTS.SEND_MESSAGE, messageData);
       setNewMessage('');
       stopTyping();
     }
@@ -92,7 +93,7 @@ const ChatInterface = ({ currentUser, selectedUser, socket, onBack }) => {
     
     if (!typing) {
       setTyping(true);
-      socket.emit('typing', {
+      socket.emit(config.SOCKET_EVENTS.TYPING, {
         senderId: currentUser.userId,
         receiverId: selectedUser.userId,
         isTyping: true
@@ -108,7 +109,7 @@ const ChatInterface = ({ currentUser, selectedUser, socket, onBack }) => {
   const stopTyping = () => {
     if (typing) {
       setTyping(false);
-      socket.emit('typing', {
+      socket.emit(config.SOCKET_EVENTS.TYPING, {
         senderId: currentUser.userId,
         receiverId: selectedUser.userId,
         isTyping: false
@@ -154,7 +155,7 @@ const ChatInterface = ({ currentUser, selectedUser, socket, onBack }) => {
             </button>
             <div className="relative">
               <img
-                src={`http://localhost:5000/uploads/${selectedUser.image}`}
+                src={`${config.API_URL}${config.ENDPOINTS.UPLOADS}/${selectedUser.image}`}
                 alt={selectedUser.name}
                 className="w-10 h-10 rounded-full object-cover"
               />

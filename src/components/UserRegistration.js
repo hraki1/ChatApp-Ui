@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import config from '../config/config';
 
 const UserRegistration = ({ onUserRegistered }) => {
   const [name, setName] = useState('');
@@ -34,7 +35,7 @@ const UserRegistration = ({ onUserRegistered }) => {
       formData.append('name', name.trim());
       formData.append('image', image);
 
-      const response = await fetch('http://localhost:5000/api/users', {
+      const response = await fetch(`${config.API_URL}${config.ENDPOINTS.USERS}`, {
         method: 'POST',
         body: formData,
       });
@@ -57,7 +58,7 @@ const UserRegistration = ({ onUserRegistered }) => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Welcome to Chat App</h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">Welcome to {config.APP_NAME}</h1>
           <p className="text-gray-600">Create your profile to start chatting</p>
         </div>
 
@@ -82,14 +83,14 @@ const UserRegistration = ({ onUserRegistered }) => {
               Profile Picture
             </label>
             <div className="space-y-4">
-              <input
-                type="file"
-                id="image"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                required
-              />
+                <input
+                  type="file"
+                  id="image"
+                  accept={config.ALLOWED_FILE_TYPES}
+                  onChange={handleImageChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  required
+                />
               
               {imagePreview && (
                 <div className="flex justify-center">
