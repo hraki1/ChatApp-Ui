@@ -1,8 +1,8 @@
 // Environment configuration
 const config = {
   // Backend URLs
-  API_URL: process.env.REACT_APP_API_URL || (process.env.NODE_ENV === 'production' ? 'https://your-backend-domain.com' : 'http://localhost:5000'),
-  SOCKET_URL: process.env.REACT_APP_SOCKET_URL || (process.env.NODE_ENV === 'production' ? 'https://your-backend-domain.com' : 'http://localhost:5000'),
+  API_URL: process.env.REACT_APP_API_URL || (process.env.NODE_ENV === 'production' ? 'https://chatapp-backend-myr7.onrender.com' : 'http://localhost:5000'),
+  SOCKET_URL: process.env.REACT_APP_SOCKET_URL || (process.env.NODE_ENV === 'production' ? 'https://chatapp-backend-myr7.onrender.com' : 'http://localhost:5000'),
   
   // App settings
   APP_NAME: process.env.REACT_APP_APP_NAME || 'Chat App',
